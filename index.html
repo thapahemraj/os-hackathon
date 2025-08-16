@@ -3,9 +3,440 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Os hackathon</title>
+    <title>Windows 11 Web</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            overflow: hidden;
+            background-image: url('https://wallpapercave.com/wp/wp9414538.jpg');
+            background-size: cover;
+            background-position: center;
+            color: white;
+        }
+
+        /* Desktop Icons */
+        .desktop {
+            height: calc(100vh - 48px);
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 80px);
+            grid-auto-rows: min-content;
+            gap: 20px;
+            align-content: start;
+        }
+
+        .desktop-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 80px;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+            font-size: 12px;
+            color: white;
+            text-decoration: none;
+            user-select: none;
+        }
+
+        .desktop-icon i {
+            font-size: 32px;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+
+        .desktop-icon:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .desktop-icon:active {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Taskbar */
+        .taskbar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 48px;
+            background: rgba(32, 32, 32, 0.8);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 12px;
+            z-index: 1000;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .taskbar-left, .taskbar-center, .taskbar-right {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        .taskbar-left {
+            gap: 4px;
+        }
+
+        .taskbar-center {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            gap: 2px;
+        }
+
+        .taskbar-right {
+            gap: 8px;
+            padding-right: 8px;
+        }
+
+        .taskbar-btn, .taskbar-app {
+            width: 40px;
+            height: 40px;
+            border: none;
+            background: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .taskbar-btn:hover, .taskbar-app:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .taskbar-app.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #0078d4;
+            border-radius: 0 0 3px 3px;
+        }
+
+        .taskbar-app.active {
+            color: #0078d4;
+        }
+
+        /* Start Menu */
+        .start-menu {
+            position: fixed;
+            bottom: 55px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            width: 600px;
+            max-width: 90vw;
+            max-height: 70vh;
+            background: rgba(32, 32, 32, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 8px;
+            padding: 20px;
+            display: none;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0;
+            transition: all 0.2s ease-out;
+            z-index: 1001;
+            overflow: hidden;
+        }
+
+        .start-menu.visible {
+            display: flex;
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .search-bar {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 5px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .search-bar i {
+            margin-right: 10px;
+            opacity: 0.7;
+        }
+
+        .search-bar input {
+            background: none;
+            border: none;
+            color: white;
+            width: 100%;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .pinned-apps {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .pinned-apps h3 {
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 12px;
+            padding: 5px 0;
+        }
+
+        .app {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: white;
+            text-decoration: none;
+        }
+
+        .app:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .app i {
+            font-size: 24px;
+            margin-bottom: 8px;
+            color: white;
+        }
+
+        .app span {
+            font-size: 12px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* System Tray */
+        .system-tray {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            height: 100%;
+            padding: 0 8px;
+        }
+
+        .system-tray i {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        #time {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 3px;
+            cursor: default;
+        }
+
+        #time:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+    </style>
 </head>
 <body>
-    
+    <!-- Desktop Icons -->
+    <div class="desktop">
+        <a href="#" class="desktop-icon" id="recycle-bin">
+            <i class="fas fa-trash"></i>
+            <span>Recycle Bin</span>
+        </a>
+        <a href="#" class="desktop-icon" id="file-explorer">
+            <i class="fas fa-folder"></i>
+            <span>File Explorer</span>
+        </a>
+        <a href="#" class="desktop-icon" id="browser">
+            <i class="fab fa-edge"></i>
+            <span>Microsoft Edge</span>
+        </a>
+        <a href="#" class="desktop-icon" id="store">
+            <i class="fas fa-store"></i>
+            <span>Microsoft Store</span>
+        </a>
+        <a href="#" class="desktop-icon" id="settings">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </a>
+    </div>
+
+    <!-- Start Menu -->
+    <div class="start-menu" id="startMenu">
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Type here to search">
+        </div>
+        <div class="pinned-apps">
+            <h3>Pinned</h3>
+            <div class="app-grid">
+                <a href="#" class="app">
+                    <i class="fab fa-edge"></i>
+                    <span>Edge</span>
+                </a>
+                <a href="#" class="app">
+                    <i class="fab fa-windows"></i>
+                    <span>Store</span>
+                </a>
+                <a href="#" class="app">
+                    <i class="fas fa-envelope"></i>
+                    <span>Mail</span>
+                </a>
+                <a href="#" class="app">
+                    <i class="fas fa-photo-video"></i>
+                    <span>Photos</span>
+                </a>
+                <a href="#" class="app">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="app">
+                    <i class="fas fa-power-off"></i>
+                    <span>Power</span>
+                </a>
+                <a href="#" class="app">
+                    <i class="fas fa-file-word"></i>
+                    <span>Word</span>
+                </a>
+                <a href="#" class="app">
+                    <i class="fas fa-file-excel"></i>
+                    <span>Excel</span>
+                </a>
+                <a href="#" class="app">
+                    <i class="fas fa-file-powerpoint"></i>
+                    <span>PowerPoint</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Taskbar -->
+    <div class="taskbar">
+        <div class="taskbar-left">
+            <button class="taskbar-btn" id="startButton">
+                <i class="fab fa-windows"></i>
+            </button>
+            <button class="taskbar-btn">
+                <i class="fas fa-search"></i>
+            </button>
+            <button class="taskbar-btn">
+                <i class="fas fa-tasks"></i>
+            </button>
+        </div>
+        <div class="taskbar-center">
+            <button class="taskbar-app active">
+                <i class="fab fa-edge"></i>
+            </button>
+            <button class="taskbar-app">
+                <i class="fas fa-folder"></i>
+            </button>
+            <button class="taskbar-app">
+                <i class="fas fa-store"></i>
+            </button>
+        </div>
+        <div class="taskbar-right">
+            <div class="system-tray">
+                <i class="fas fa-wifi"></i>
+                <i class="fas fa-volume-up"></i>
+                <span id="time">11:45 AM</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Start menu toggle
+            const startButton = document.getElementById('startButton');
+            const startMenu = document.getElementById('startMenu');
+            
+            startButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                startMenu.classList.toggle('visible');
+            });
+            
+            // Close start menu when clicking outside
+            document.addEventListener('click', function() {
+                startMenu.classList.remove('visible');
+            });
+            
+            // Prevent closing when clicking inside start menu
+            startMenu.addEventListener('click', function(e) {
+                e.stopPropagation();
+            });
+            
+            // Update time
+            function updateTime() {
+                const now = new Date();
+                let hours = now.getHours();
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                hours = hours % 12;
+                hours = hours ? hours : 12; // Convert 0 to 12
+                document.getElementById('time').textContent = `${hours}:${minutes} ${ampm}`;
+            }
+            
+            updateTime();
+            setInterval(updateTime, 1000);
+            
+            // Set active app
+            const apps = document.querySelectorAll('.taskbar-app');
+            apps.forEach(app => {
+                app.addEventListener('click', function() {
+                    apps.forEach(a => a.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
 </body>
 </html>
