@@ -3,44 +3,80 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Desktop Clone</title>
+  <title>Windows 11 Web</title>
   <link rel="stylesheet" href="desktop.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-  <!-- Desktop Background -->
+  <!-- Desktop Icons -->
   <div class="desktop">
-    
-    <!-- Folders in middle -->
-    <div class="folders">
-      <div class="folder">
-        <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png" alt="Folder">
-        <p>Project</p>
-      </div>
-      <div class="folder">
-        <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png" alt="Folder">
-        <p>Learning</p>
-      </div>
-      <div class="folder">
-        <img src="https://cdn-icons-png.flaticon.com/512/716/716784.png" alt="Folder">
-        <p>Hackathon</p>
-      </div>
-    </div>
-
-    <!-- Taskbar -->
-    <div class="taskbar">
-      <div class="icons">
-        <img src="https://cdn-icons-png.flaticon.com/512/732/732212.png" alt="Edge">
-        <img src="https://cdn-icons-png.flaticon.com/512/5968/5968292.png" alt="Chrome">
-        <img src="https://cdn-icons-png.flaticon.com/512/906/906324.png" alt="VS Code">
-        <img src="https://cdn-icons-png.flaticon.com/512/1384/1384060.png" alt="Whatsapp">
-        <img src="https://cdn-icons-png.flaticon.com/512/732/732200.png" alt="Folder">
-      </div>
-      <div class="time">
-        <p>10:58</p>
-        <p>16-08-2025</p>
-      </div>
-    </div>
-
+    <a href="#" class="desktop-icon" id="recycle-bin">
+      <i class="fas fa-trash"></i>
+      <span>Recycle Bin</span>
+    </a>
+    <a href="#" class="desktop-icon" id="file-explorer">
+      <i class="fas fa-folder"></i>
+      <span>File Explorer</span>
+    </a>
+    <a href="#" class="desktop-icon" id="browser">
+      <i class="fab fa-edge"></i>
+      <span>Microsoft Edge</span>
+    </a>
+    <a href="#" class="desktop-icon" id="store">
+      <i class="fas fa-store"></i>
+      <span>Microsoft Store</span>
+    </a>
+    <a href="#" class="desktop-icon" id="settings">
+      <i class="fas fa-cog"></i>
+      <span>Settings</span>
+    </a>
   </div>
+
+  <!-- Start Menu -->
+  <div class="start-menu" id="startMenu">
+    <div class="search-bar">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Type here to search">
+    </div>
+    <div class="pinned-apps">
+      <h3>Pinned</h3>
+      <div class="app-grid">
+        <a href="#" class="app"><i class="fab fa-edge"></i><span>Edge</span></a>
+        <a href="#" class="app"><i class="fab fa-windows"></i><span>Store</span></a>
+        <a href="#" class="app"><i class="fas fa-envelope"></i><span>Mail</span></a>
+        <a href="#" class="app"><i class="fas fa-photo-video"></i><span>Photos</span></a>
+        <a href="#" class="app"><i class="fas fa-cog"></i><span>Settings</span></a>
+        <a href="#" class="app"><i class="fas fa-power-off"></i><span>Power</span></a>
+        <a href="#" class="app"><i class="fas fa-file-word"></i><span>Word</span></a>
+        <a href="#" class="app"><i class="fas fa-file-excel"></i><span>Excel</span></a>
+        <a href="#" class="app"><i class="fas fa-file-powerpoint"></i><span>PowerPoint</span></a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Taskbar -->
+  <div class="taskbar">
+    <div class="taskbar-left">
+      <button class="taskbar-btn" id="startButton"><i class="fab fa-windows"></i></button>
+      <button class="taskbar-btn"><i class="fas fa-search"></i></button>
+      <button class="taskbar-btn"><i class="fas fa-tasks"></i></button>
+    </div>
+
+    <div class="taskbar-center">
+      <button class="taskbar-app active"><i class="fab fa-edge"></i></button>
+      <button class="taskbar-app"><i class="fas fa-folder"></i></button>
+      <button class="taskbar-app"><i class="fas fa-store"></i></button>
+    </div>
+
+    <div class="taskbar-right">
+      <div class="system-tray">
+        <i class="fas fa-wifi"></i>
+        <i class="fas fa-volume-up"></i>
+        <span id="time">11:45 AM</span>
+      </div>
+    </div>
+  </div>
+
+  <script src="desktop.js"></script>
 </body>
 </html>
