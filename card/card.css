@@ -8,10 +8,37 @@
     height: 350px;
     width: 500px;
     /* border: 1px solid black; */
+    background-color: rgba(63, 96, 202, 0);
     border-radius: 5px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     box-shadow: 0 0 8px 0.2px rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.all_icons{
+    margin: 1rem;
+    /* border: 1px solid red; */
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 5px;
+}
+
+.all_icons:hover{
+    background-color: rgb(255, 255, 255);
+    border-radius: 5px;
+    box-shadow: 0 0 8px 0.2px rgba(0, 0, 0, 0.4);
+}
+
+i{
+    font-size: 30px;
+    padding: 5px;
 }
